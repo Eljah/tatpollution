@@ -186,7 +186,7 @@ public class ParsePollutionServlet extends HttpServlet {
                     Date dateManual1 = null;
                     if (matcher2.group(5) != null) {
                         try {
-                            SimpleDateFormat sdf = new SimpleDateFormat("hh.mm dd.MM.yyyy");
+                            SimpleDateFormat sdf = new SimpleDateFormat("hh.mm dd.MM.yy");
                             sdf.setTimeZone(TimeZone.getTimeZone("MSK"));
                             dateManual1 = sdf.parse(matcher2.group(5));
                         } catch (ParseException e) {
@@ -200,7 +200,7 @@ public class ParsePollutionServlet extends HttpServlet {
                     Date dateManual2 = null;
                     if (matcher2.group(6) != null) {
                         try {
-                            SimpleDateFormat sdf = new SimpleDateFormat("hh.mm dd.MM.yyyy");
+                            SimpleDateFormat sdf = new SimpleDateFormat("hh.mm dd.MM.yy");
                             sdf.setTimeZone(TimeZone.getTimeZone("MSK"));
                             dateManual2 = sdf.parse(matcher2.group(6));
                         } catch (ParseException e) {
