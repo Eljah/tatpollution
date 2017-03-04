@@ -4,121 +4,11 @@
         xmlns="http://java.sun.com/xml/ns/javaee"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
-    <servlet>
-        <servlet-name>sign</servlet-name>
-        <servlet-class>com.appspot.SignGuestbookServlet</servlet-class>
-    </servlet>
-    <servlet>
-       <servlet-name>guestbook</servlet-name>
-      <servlet-class>com.appspot.GuestbookServlet</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>level</servlet-name>
-        <servlet-class>com.appspot.DowloadAndParseNavigationDataServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>sign</servlet-name>
-        <url-pattern>/sign</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-      <servlet-name>guestbook</servlet-name>
-      <url-pattern>/guestbook</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>level</servlet-name>
-        <url-pattern>/level</url-pattern>
-    </servlet-mapping>
-    <welcome-file-list>
-        <welcome-file>welcome</welcome-file>
-    </welcome-file-list>
 
-
-    <servlet>
-        <servlet-name>visualize</servlet-name>
-        <servlet-class>com.appspot.DataExtractorServlet</servlet-class>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>visualize</servlet-name>
-        <url-pattern>/visualize</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>data</servlet-name>
-        <servlet-class>com.appspot.DataPopulatorServlet</servlet-class>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>data</servlet-name>
-        <url-pattern>/dataload</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>iframe</servlet-name>
-        <servlet-class>com.appspot.IframeServlet</servlet-class>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>iframe</servlet-name>
-        <url-pattern>/iframe</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>welcome</servlet-name>
-        <servlet-class>com.appspot.WelcomeServlet</servlet-class>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>welcome</servlet-name>
-        <url-pattern>/welcome</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>file</servlet-name>
-        <servlet-class>com.appspot.BlobServlet</servlet-class>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>file</servlet-name>
-        <url-pattern>/file</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>selfload</servlet-name>
-        <servlet-class>com.appspot.SelfloadServlet</servlet-class>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>selfload</servlet-name>
-        <url-pattern>/selfload</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>delete</servlet-name>
-        <servlet-class>com.appspot.DeleteSpecificPointServlet</servlet-class>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>delete</servlet-name>
-        <url-pattern>/delete</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>FeedServlet</servlet-name>
-        <servlet-class>com.appspot.FeedServlet</servlet-class>
-        <init-param>
-            <param-name>default.feed.type</param-name>
-            <param-value>rss_2.0</param-value>
-        </init-param>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>FeedServlet</servlet-name>
-        <url-pattern>/feed</url-pattern>
-    </servlet-mapping>
-
-
-    <servlet>
+  <!--<welcome-file-list>
+        <welcome-file>pollution</welcome-file>
+    </welcome-file-list>-->
+  <servlet>
         <servlet-name>ChartServlet</servlet-name>
         <servlet-class>com.appspot.ChartServlet</servlet-class>
         <init-param>
@@ -130,6 +20,17 @@
     <servlet-mapping>
         <servlet-name>ChartServlet</servlet-name>
         <url-pattern>/chart</url-pattern>
+    </servlet-mapping>
+
+
+    <servlet>
+        <servlet-name>PollutionServlet</servlet-name>
+        <servlet-class>com.appspot.ParsePollutionServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>PollutionServlet</servlet-name>
+        <url-pattern>/pollution</url-pattern>
     </servlet-mapping>
 
 <!-- [START Objectify] -->

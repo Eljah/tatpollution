@@ -29,11 +29,9 @@ import javax.servlet.ServletContextEvent;
  **/
 public class OfyHelper implements ServletContextListener {
   public static void register() {
-    ObjectifyService.register(Guestbook.class);
-    ObjectifyService.register(Greeting.class);
-    ObjectifyService.register(StreamGauge.class);
-    ObjectifyService.register(DataEntry.class);
-    ObjectifyService.register(UploadedFile.class);
+    ObjectifyService.register(Measurement.class);
+    ObjectifyService.register(MeasurementParameter.class);
+    ObjectifyService.register(MeasurementStation.class);
   }
 
   public void contextInitialized(ServletContextEvent event) {

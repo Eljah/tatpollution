@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <cronentries>
     <cron>
-        <url>/level</url>
+        <url>/pollution</url>
         <description>Add count + 1 every 1 hours</description>
         <schedule>every 1 hours</schedule>
     </cron>
