@@ -44,7 +44,9 @@ public class DataExtractorServlet extends DataSourceServlet {
         }
         if (request.getParameter("station") != null) {
             station = request.getParameter("station");
-            if (station=="") {station=null;}
+            if (station == "") {
+                station = null;
+            }
         }
         ArrayList cd = new ArrayList();
         cd.add(new ColumnDescription("date", ValueType.DATETIME, "Date"));
@@ -67,49 +69,48 @@ public class DataExtractorServlet extends DataSourceServlet {
         syncCache.setErrorHandler(ErrorHandlers.getConsistentLogAndContinue(Level.INFO));
         datasets = (List<Measurement>) syncCache.get(parameter + " " + station + " " + timevalue); // Read from cache.
 
-
-        //com.googlecode.objectify.Key<MeasurementParameter> keyToSelectParameters=Key.create(MeasurementParameter.class, parameter);
-        //System.out.println(keyToSelectParameters.getId());
-
-        List<MeasurementParameter> measurementParametersList = ObjectifyService.ofy()
-                .load()
-                .type(MeasurementParameter.class) // We want only Greetings
-                //.ancestor(theBook)    // Anyone in this book
-                //.order("-date")       // Most recent first - date is indexed.
-                //.limit(5)             // Only show 5 of them.
-                .list();
-        MeasurementParameter measurementParameterToSelect = null;
-        for (MeasurementParameter st : measurementParametersList) {
-            if (st.parameterName.equals(parameter)) {
-                measurementParameterToSelect = st;
-            }
-        }
-        System.out.println(measurementParameterToSelect.parameterName);
-
         if (datasets == null) {
             //if (count != -1) {
             if (station != null) {
-                datasets = ObjectifyService.ofy()
-                        .load()
-                        .type(Measurement.class)
-                        .ancestor(new MeasurementStation(station)).
-                        filter("parameterString = ", parameter).
-                        //.orderKey(true)
-                        //.limit(count)             // Only show 5 of them.
-                        list();
+                if (parameter != "") {
+                    datasets = ObjectifyService.ofy()
+                            .load()
+                            .type(Measurement.class)
+                            .ancestor(new MeasurementStation(station)).
+                                    filter("parameterString = ", parameter).
+                            //.orderKey(true)
+                            //.limit(count)             // Only show 5 of them.
+                                    list();
+                } else {
+                    System.out.println("1-1");
+                    datasets = ObjectifyService.ofy()
+                            .load()
+                            .type(Measurement.class)
+                            .ancestor(new MeasurementStation(station)).
+                                    list();
+                    System.out.println("1-2");
+                }
+
             } else {
-                datasets = ObjectifyService.ofy()
-                        .load()
-                        .type(Measurement.class).
-                        filter("parameterString = ", parameter).
-                        //.orderKey(true)
-                        //.limit(count)             // Only show 5 of them.
-                        list();
+                if (parameter != "") {
+                    datasets = ObjectifyService.ofy()
+                            .load()
+                            .type(Measurement.class).
+                                    filter("parameterString = ", parameter).
+                                    list();
+                } else {
+                    System.out.println("2-1");
+                    datasets = ObjectifyService.ofy()
+                            .load()
+                            .type(Measurement.class).
+                                    list();
+                    System.out.println("2-2");
+                }
+
+                System.out.println(datasets);
+                syncCache.put(parameter + " " + station + " " + timevalue, datasets);
+
             }
-
-            System.out.println(datasets);
-            syncCache.put(parameter + " " + station + " " + timevalue, datasets);
-
         }
         //Collections.reverse(datasets);
         for (Measurement de : datasets) {
@@ -127,18 +128,18 @@ public class DataExtractorServlet extends DataSourceServlet {
                 cal.setTime(pointDate);
                 int day = cal.get(Calendar.DAY_OF_MONTH);
 
-                tr.addCell(new DateTimeValue(Integer.parseInt(new SimpleDateFormat("yyyy").format(de.dateStart)),Integer.parseInt(new SimpleDateFormat("MM").format(de.dateStart))-1,Integer.parseInt(new SimpleDateFormat("dd").format(de.dateStart)),Integer.parseInt(new SimpleDateFormat("HH").format(de.dateStart)),Integer.parseInt(new SimpleDateFormat("mm").format(de.dateStart)),Integer.parseInt(new SimpleDateFormat("ss").format(de.dateStart)),Integer.parseInt(new SimpleDateFormat("S").format(de.dateStart))));
+                tr.addCell(new DateTimeValue(Integer.parseInt(new SimpleDateFormat("yyyy").format(de.dateStart)), Integer.parseInt(new SimpleDateFormat("MM").format(de.dateStart)) - 1, Integer.parseInt(new SimpleDateFormat("dd").format(de.dateStart)), Integer.parseInt(new SimpleDateFormat("HH").format(de.dateStart)), Integer.parseInt(new SimpleDateFormat("mm").format(de.dateStart)), Integer.parseInt(new SimpleDateFormat("ss").format(de.dateStart)), Integer.parseInt(new SimpleDateFormat("S").format(de.dateStart))));
                 if (de.tlvExceds) {
                     tr.addCell(Value.getNullValueFromValueType(ValueType.NUMBER));
                     tr.addCell(Value.getNullValueFromValueType(ValueType.TEXT));
                     tr.addCell(de.value);
                     if (de.tlv != null) {
-                        tr.addCell(new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(de.dateStart)+"-"+new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(de.dateStop) +": "+ de.value +"; Превышение ПДК " + de.tlv +" "+de.parameter.getName()+" на "+de.station.getName());
+                        tr.addCell(new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(de.dateStart) + "-" + new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(de.dateStop) + ": " + de.value + "; Превышение ПДК " + de.tlv + " " + de.parameter.getName() + " на " + de.station.getName());
                     }
                 } else {
                     tr.addCell(de.value);
                     if (de.tlv != null) {
-                        tr.addCell(new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(de.dateStart)+"-"+new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(de.dateStop) +": "+ de.value +"; Нет превышения ПДК " + de.tlv +" "+de.parameter.getName()+" на "+de.station.getName());
+                        tr.addCell(new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(de.dateStart) + "-" + new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(de.dateStop) + ": " + de.value + "; Нет превышения ПДК " + de.tlv + " " + de.parameter.getName() + " на " + de.station.getName());
                     }
                     tr.addCell(Value.getNullValueFromValueType(ValueType.NUMBER));
                     tr.addCell(Value.getNullValueFromValueType(ValueType.TEXT));

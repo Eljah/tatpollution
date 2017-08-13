@@ -107,6 +107,7 @@
 <body>
 <form id="kms" action="/welcome">
 <select name="parameter" onchange="submit()">
+    <option value="" ${parameter==null  ? 'selected' : ''}>Все параметры</option>
     <c:forEach items="${parameters}" var="parameterIT">
         <option value="${parameterIT[0]}" ${parameterIT[0]==parameter  ? 'selected' : ''}>${parameterIT[1]}</option>
     </c:forEach>
@@ -114,7 +115,7 @@
 <select name="station" onchange="submit()">
     <option value="" ${station==null  ? 'selected' : ''}>Все станции</option>
     <c:forEach items="${stations}" var="stationIT">
-        <option value="${stationIT}" ${stationIT==station  ? 'selected' : ''}>${stationIT}</option>
+        <option value="<c:out value='${stationIT}'/>" ${stationIT==station  ? 'selected' : ''}>${stationIT}</option>
     </c:forEach>
 </select>
 
