@@ -32,11 +32,10 @@
             var options = {
                 title: 'Уровень воды, м',
                 tooltip: {isHtml: true},
-                //hAxis: {title: 'date',
-                //    gridlines: {count: 15}},
+
                 //vAxis: {title: 'level', minValue: 0, maxValue: 15},
                 legend: 'none',
-                width: 300, height: 160,
+                width: 600, height: 300,
                 curveType: "function",
                 //trendlines: {
                 //    0: {
@@ -67,8 +66,11 @@
                     1: {logScale: false, maxValue: 2}
                 },
                 hAxis: {
-                    format: 'd/M/yy',
+                    format: 'd/M/yy/hh:mm:ss',
                     //gridlines: {count: 15}
+                    viewWindow: {
+                                         min: new Date(2017, 7, 9),
+                                         max: new Date(2017, 7, 14)}
                 },
                 //axes: {
                 //    y: {

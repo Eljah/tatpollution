@@ -8,12 +8,14 @@ import com.google.visualization.datasource.base.TypeMismatchException;
 import com.google.visualization.datasource.datatable.ColumnDescription;
 import com.google.visualization.datasource.datatable.DataTable;
 import com.google.visualization.datasource.datatable.TableRow;
+import com.google.visualization.datasource.datatable.value.DateTimeValue;
 import com.google.visualization.datasource.datatable.value.DateValue;
 import com.google.visualization.datasource.datatable.value.Value;
 import com.google.visualization.datasource.datatable.value.ValueType;
 import com.google.visualization.datasource.query.Query;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.ObjectifyService;
+import com.ibm.icu.util.GregorianCalendar;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -45,7 +47,7 @@ public class DataExtractorServlet extends DataSourceServlet {
             if (station=="") {station=null;}
         }
         ArrayList cd = new ArrayList();
-        cd.add(new ColumnDescription("date", ValueType.DATE, "Date"));
+        cd.add(new ColumnDescription("date", ValueType.DATETIME, "Date"));
         cd.add(new ColumnDescription("measurement", ValueType.NUMBER, "Value"));
         ColumnDescription tooltip = new ColumnDescription("tlv", ValueType.TEXT, "TLV");
         tooltip.setCustomProperty("role", "tooltip");
@@ -125,7 +127,7 @@ public class DataExtractorServlet extends DataSourceServlet {
                 cal.setTime(pointDate);
                 int day = cal.get(Calendar.DAY_OF_MONTH);
 
-                tr.addCell(new DateValue(Integer.parseInt(year), pointDate.getMonth(), day));
+                tr.addCell(new DateTimeValue(Integer.parseInt(new SimpleDateFormat("yyyy").format(de.dateStart)),Integer.parseInt(new SimpleDateFormat("MM").format(de.dateStart))-1,Integer.parseInt(new SimpleDateFormat("dd").format(de.dateStart)),Integer.parseInt(new SimpleDateFormat("HH").format(de.dateStart)),Integer.parseInt(new SimpleDateFormat("mm").format(de.dateStart)),Integer.parseInt(new SimpleDateFormat("ss").format(de.dateStart)),Integer.parseInt(new SimpleDateFormat("S").format(de.dateStart))));
                 if (de.tlvExceds) {
                     tr.addCell(Value.getNullValueFromValueType(ValueType.NUMBER));
                     tr.addCell(Value.getNullValueFromValueType(ValueType.TEXT));
