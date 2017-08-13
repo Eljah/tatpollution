@@ -35,6 +35,11 @@ public class WelcomeServlet extends HttpServlet {
         cal.add(Calendar.DATE, -1);
         from = cal.getTime();
 
+        Calendar cal2 = Calendar.getInstance();
+        cal2.setTime(from);
+        cal2.add(Calendar.DATE, 1);
+        to = cal2.getTime();
+
 
         if (req.getParameter("parameter") != null) {
             parameter = req.getParameter("parameter");
