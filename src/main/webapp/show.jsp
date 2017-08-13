@@ -18,7 +18,7 @@
         // Send the query to the data source.
         function init() {
             // Specify the data source URL.
-            var query = new google.visualization.Query('visualize?count=${count}&km=${km}');
+            var query = new google.visualization.Query('visualize?station=${station}&parameter=${parameter}');
             // Send the query with a callback function.
             query.send(handleQueryResponse);
         }
@@ -102,69 +102,22 @@
     </script>
 </head>
 <body>
-<h1>Архив уровней Волги по водомерным постам имени Эрнста Галимовича Улумбекова</h1>
-Выберите интересующий вас водомерный пост и число точек на графике:
 <form id="kms" action="/welcome">
-<select name="km" onchange="submit()">
-    <option value="908" ${km==908  ? 'selected' : ''}>Нижний Новгород</option>
-    <option value="1303" ${km==1303  ? 'selected' : ''}>Казань</option>
-    <option value="1665" ${km==1665  ? 'selected' : ''}>Тольятти</option>
-    <c:forEach items="${streamgauges}" var="value">
-        <option value="${value[1]}" ${value[1]==km  ? 'selected' : ''}>${value[0]}</option>
+<select name="parameter" onchange="submit()">
+    <c:forEach items="${parameters}" var="parameterIT">
+        <option value="${parameterIT[0]}" ${parameterIT[0]==parameter  ? 'selected' : ''}>${parameterIT[1]}</option>
     </c:forEach>
-
 </select>
-    <select name="count" onchange="submit()">
-        <option value="10" ${count==10  ? 'selected' : ''}>10</option>
-        <option value="20" ${count==20  ? 'selected' : ''}>20</option>
-        <option value="30" ${count==30  ? 'selected' : ''}>30</option>
-        <option value="50" ${count==50  ? 'selected' : ''}>50</option>
-        <option value="-1" ${count==-1  ? 'selected' : ''}>Все</option>
-    </select>
+<select name="station" onchange="submit()">
+    <option value="" ${station==null  ? 'selected' : ''}>Все станции</option>
+    <c:forEach items="${stations}" var="stationIT">
+        <option value="${stationIT}" ${stationIT==station  ? 'selected' : ''}>${stationIT}</option>
+    </c:forEach>
+</select>
 </form>
 
 <!--Div that will hold the visualization-->
 <div id="chart_div">
 </div>
-
-<br>
-Вы можете добавить данный динамически обновляемый график для определенного водомерного поста на свой сайт. Для этого скопируйте текст из поля ниже.
-<br>
-
-<textarea style="width: 300px;height: 200px;" class="select-on-click" id="embed" readonly="">&lt;iframe height='200' width='300' frameborder='0' allowtransparency='true' scrolling='no' src='http://volgalevel.appspot.com/iframe?km=${km}&count=${count}'&gt;&lt;/iframe&gt;</textarea>
-
-<br>
-Хронологический список таблиц с данными водомерных постов
-<br>
-
-<display:table name="allfiles" id="row" pagesize="10"
-               export="true" sort="list" requestURI="welcome" class="table table-bordered table-striped">
-
-    <display:setProperty name="paging.banner.no_items_found">
-        <div class="pagination">No {0} found.</div>
-    </display:setProperty>
-    <display:setProperty name="paging.banner.one_item_found">
-        <div class="pagination">One {0} found.</div>
-    </display:setProperty>
-    <display:setProperty name="paging.banner.all_items_found">
-        <div class="pagination">{0} {1} found, displaying all {2}.</div>
-    </display:setProperty>
-    <display:setProperty name="paging.banner.some_items_found">
-        <div class="pagination">{0} {1} found, displaying {2} to {3}.</div>
-    </display:setProperty>
-    <display:setProperty name="paging.banner.onepage">
-        <div class="pagination">{0}</div>
-    </display:setProperty>
-
-    <display:column property="name" title="Имя файла и полный адрес файла"
-                    sortable="true" headerClass="sortable"/>
-    <display:column title="Скачать файл за число"
-                    sortable="true" headerClass="sortable">
-        <a href="file?date=${row.date}" class="btn btn-success"><fmt:formatDate pattern="yyyy-MM-dd" value="${row.datevisible}"/></a>
-    </display:column>
-
-</display:table>
-
-
 </body>
 </html>

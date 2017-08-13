@@ -149,33 +149,37 @@ public class ParsePollutionServlet extends HttpServlet {
                                 measure4d = Double.parseDouble(measure4);
                             } catch (NumberFormatException nfe) {
                             }
+                            System.out.println("P1"+measurementParameter[0]);
+                            System.out.println("P2"+measurementParameter[1]);
+
                             MeasurementParameter measurementParameter1 = new MeasurementParameter(measurementParameter[0], measurementParameter[1]);
+                            System.out.println("M"+measurementParameter1.parameterName);
                             Calendar cal = Calendar.getInstance();
                             cal.setTime(dateAutomated);
                             cal.add(Calendar.HOUR, 8);
                             Date mes1dateend = cal.getTime();
                             if (measure1d != null) {
-                                Measurement measurement1 = new Measurement(dateAutomated, mes1dateend, dateAutomated, measure1d, Double.parseDouble(pdk1), measurementParameter[0], mesurementStationName);
+                                Measurement measurement1 = new Measurement(dateAutomated, mes1dateend, dateAutomated, measure1d, Double.parseDouble(pdk1), measurementParameter[0],measurementParameter[1], mesurementStationName);
                                 mes.add(measurement1);
                             }
                             cal.add(Calendar.HOUR, 8);
                             Date mes2dateend = cal.getTime();
                             if (measure2d != null) {
-                                Measurement measurement2 = new Measurement(mes1dateend, mes2dateend, dateAutomated, measure2d, Double.parseDouble(pdk1), measurementParameter[0], mesurementStationName);
+                                Measurement measurement2 = new Measurement(mes1dateend, mes2dateend, mes1dateend, measure2d, Double.parseDouble(pdk1), measurementParameter[0],measurementParameter[1], mesurementStationName);
                                 mes.add(measurement2);
                             }
                             cal.add(Calendar.HOUR, 8);
                             Date mes3dateend = cal.getTime();
 
                             if (measure3d != null) {
-                                Measurement measurement3 = new Measurement(mes2dateend, mes3dateend, dateAutomated, measure3d, Double.parseDouble(pdk1), measurementParameter[0], mesurementStationName);
+                                Measurement measurement3 = new Measurement(mes2dateend, mes3dateend, mes2dateend, measure3d, Double.parseDouble(pdk1), measurementParameter[0],measurementParameter[1], mesurementStationName);
                                 mes.add(measurement3);
                             }
                             cal.add(Calendar.HOUR, 8);
                             Date mes4dateend = cal.getTime();
 
                             if (measure4d != null) {
-                                Measurement measurement4 = new Measurement(mes3dateend, mes4dateend, dateAutomated, measure4d, Double.parseDouble(pdk1), measurementParameter[0], mesurementStationName);
+                                Measurement measurement4 = new Measurement(mes3dateend, mes4dateend, mes3dateend, measure4d, Double.parseDouble(pdk1), measurementParameter[0],measurementParameter[1], mesurementStationName);
                                 mes.add(measurement4);
                             }
 
@@ -240,7 +244,7 @@ public class ParsePollutionServlet extends HttpServlet {
                                 measure_date = cal.getTime();
 
                                 if (measured != null) {
-                                    Measurement measurement = new Measurement(dateManual1, dateManual2, measure_date, measured, Double.parseDouble(pdk1), measurementParameter[0], mesurementStationName);
+                                    Measurement measurement = new Measurement(dateManual1, dateManual2, measure_date, measured, Double.parseDouble(pdk1), measurementParameter[0],  measurementParameter[1],mesurementStationName);
                                     mes.add(measurement);
                                 }
                             }
@@ -267,7 +271,7 @@ public class ParsePollutionServlet extends HttpServlet {
             //removed as too expensive
             if (req.getParameter("debug") != null) {
                 for (Measurement sg : mes) {
-                    wr.println(sg.stationAndParameterAndDate + " : " + sg.value);
+                    wr.println(sg.stationAndParameterAndDate + " : " + sg.value + " : " + sg.dateConcrete);
 
                 }
             }

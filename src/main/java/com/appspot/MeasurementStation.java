@@ -18,7 +18,16 @@ public class MeasurementStation  implements Serializable {
     @Index
     public String stationName;
 
+    MeasurementStation()
+    {
+
+    }
+
     MeasurementStation(String stationName) {
         this.stationName=stationName;
         ObjectifyService.ofy().save().entity(this).now();
-    }}
+    }
+
+}
+
+

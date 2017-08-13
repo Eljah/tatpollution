@@ -17,11 +17,29 @@ public class MeasurementParameter implements Serializable {
     @Id
     @Index
     public String parameterName;
+
+    @Index
+    public String parameterNameSearch;
     public String unit;
+
+    MeasurementParameter()
+    {
+
+    }
 
     MeasurementParameter(String parameterName, String unit) {
         this.parameterName=parameterName;
+        this.parameterNameSearch=parameterName;
         this.unit=unit;
         ObjectifyService.ofy().save().entity(this).now();
     }
+
+    MeasurementParameter(String parameterName) {
+        this.parameterName=parameterName;
+        this.parameterNameSearch=parameterName;
+        this.unit=ObjectifyService.ofy().load().entity(this).now().unit;
+
+    }
+
+
 }

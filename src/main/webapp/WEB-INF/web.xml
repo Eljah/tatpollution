@@ -5,23 +5,9 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
 
-  <!--<welcome-file-list>
-        <welcome-file>pollution</welcome-file>
-    </welcome-file-list>-->
-  <servlet>
-        <servlet-name>ChartServlet</servlet-name>
-        <servlet-class>com.appspot.ChartServlet</servlet-class>
-        <init-param>
-            <param-name>default.feed.type</param-name>
-            <param-value>rss_2.0</param-value>
-        </init-param>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>ChartServlet</servlet-name>
-        <url-pattern>/chart</url-pattern>
-    </servlet-mapping>
-
+    <welcome-file-list>
+        <welcome-file>welcome</welcome-file>
+    </welcome-file-list>
 
     <servlet>
         <servlet-name>PollutionServlet</servlet-name>
@@ -31,6 +17,36 @@
     <servlet-mapping>
         <servlet-name>PollutionServlet</servlet-name>
         <url-pattern>/pollution</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>corrector</servlet-name>
+        <servlet-class>com.appspot.IframeServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>corrector</servlet-name>
+        <url-pattern>/corrector</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>welcome</servlet-name>
+        <servlet-class>com.appspot.WelcomeServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>welcome</servlet-name>
+        <url-pattern>/</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>visualize</servlet-name>
+        <servlet-class>com.appspot.DataExtractorServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>visualize</servlet-name>
+        <url-pattern>/visualize</url-pattern>
     </servlet-mapping>
 
 <!-- [START Objectify] -->
@@ -50,29 +66,12 @@
     <security-constraint>
         <web-resource-collection>
             <web-resource-name>cron</web-resource-name>
-            <url-pattern>/level</url-pattern>
+            <url-pattern>/pollution</url-pattern>
         </web-resource-collection>
         <auth-constraint>
             <role-name>admin</role-name>
         </auth-constraint>
     </security-constraint>
-    <security-constraint>
-        <web-resource-collection>
-            <web-resource-name>dataload</web-resource-name>
-            <url-pattern>/dataload</url-pattern>
-        </web-resource-collection>
-        <auth-constraint>
-            <role-name>admin</role-name>
-        </auth-constraint>
-    </security-constraint>
-    <security-constraint>
-        <web-resource-collection>
-            <web-resource-name>delete</web-resource-name>
-            <url-pattern>/delete</url-pattern>
-        </web-resource-collection>
-        <auth-constraint>
-            <role-name>admin</role-name>
-        </auth-constraint>
-    </security-constraint>
+
 
 </web-app>
