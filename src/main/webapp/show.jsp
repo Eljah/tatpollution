@@ -18,7 +18,7 @@
         // Send the query to the data source.
         function init() {
             // Specify the data source URL.
-            var query = new google.visualization.Query('visualize?station=${station}&parameter=${parameter}');
+            var query = new google.visualization.Query('visualize?station=${station}&parameter=${parameter}&from=${from}&to=${to}');
             // Send the query with a callback function.
             query.send(handleQueryResponse);
         }
@@ -69,8 +69,9 @@
                     format: 'd/M/yy/hh:mm:ss',
                     //gridlines: {count: 15}
                     viewWindow: {
-                                         min: new Date(2017, 7, 9),
-                                         max: new Date(2017, 7, 14)}
+                                         min: new Date("${fromC}"),
+                                         max: new Date("${toС}")
+                                         }
                 },
                 //axes: {
                 //    y: {
@@ -116,6 +117,10 @@
         <option value="${stationIT}" ${stationIT==station  ? 'selected' : ''}>${stationIT}</option>
     </c:forEach>
 </select>
+
+From <input type="date" name="from"  onchange="submit()" value="${from}"><br>
+to <input type="date" name="to"  onchange="submit()" value="${to}"><br>
+
 </form>
 
 <!--Div that will hold the visualization-->
