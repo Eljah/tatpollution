@@ -19,6 +19,7 @@ import com.ibm.icu.util.GregorianCalendar;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -39,6 +40,10 @@ public class DataExtractorServlet extends DataSourceServlet {
         String station = "";
         String timevalue = "";
 
+        Date from = new Date();
+        Date to = new Date();
+
+
         if (request.getParameter("parameter") != null) {
             parameter = request.getParameter("parameter");
         }
@@ -48,6 +53,25 @@ public class DataExtractorServlet extends DataSourceServlet {
                 station = null;
             }
         }
+
+        if (request.getParameter("from") != null) {
+            System.out.println(request.getParameter("from"));
+            try {
+                from = (new SimpleDateFormat("yyyy-MM-dd")).parse(request.getParameter("from"));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        if (request.getParameter("to") != null) {
+            System.out.println(request.getParameter("to"));
+            try {
+                to = (new SimpleDateFormat("yyyy-MM-dd")).parse(request.getParameter("to"));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        timevalue = to.toString() + from.toString();
+
         ArrayList cd = new ArrayList();
         cd.add(new ColumnDescription("date", ValueType.DATETIME, "Date"));
         cd.add(new ColumnDescription("measurement", ValueType.NUMBER, "Value"));
@@ -77,7 +101,8 @@ public class DataExtractorServlet extends DataSourceServlet {
                             .load()
                             .type(Measurement.class)
                             .ancestor(new MeasurementStation(station)).
-                                    filter("parameterString = ", parameter).
+                                    filter("dateStart <= ", to.getTime()).
+                                    filter("dateStart >= ", from.getTime()).
                             //.orderKey(true)
                             //.limit(count)             // Only show 5 of them.
                                     list();
@@ -87,6 +112,8 @@ public class DataExtractorServlet extends DataSourceServlet {
                             .load()
                             .type(Measurement.class)
                             .ancestor(new MeasurementStation(station)).
+                                    filter("dateStart <= ", to.getTime()).
+                                    filter("dateStart >= ", from.getTime()).
                                     list();
                     System.out.println("1-2");
                 }
@@ -97,12 +124,16 @@ public class DataExtractorServlet extends DataSourceServlet {
                             .load()
                             .type(Measurement.class).
                                     filter("parameterString = ", parameter).
+                                    filter("dateStart <= ", to.getTime()).
+                                    filter("dateStart >= ", from.getTime()).
                                     list();
                 } else {
                     System.out.println("2-1");
                     datasets = ObjectifyService.ofy()
                             .load()
                             .type(Measurement.class).
+                                    filter("dateStart <= ", to.getTime()).
+                                    filter("dateStart >= ", from.getTime()).
                                     list();
                     System.out.println("2-2");
                 }
