@@ -169,12 +169,12 @@ public class DataExtractorServlet extends DataSourceServlet {
                         tr.addCell(Value.getNullValueFromValueType(ValueType.TEXT));
                         tr.addCell(de.value);
                         if (de.tlv != null) {
-                            tr.addCell(new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(de.dateStart) + "-" + new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(de.dateStop) + ": " + de.value + "; Превышение ПДК " + de.tlv + " " + de.parameter.getName() + " на " + de.station.getName());
+                            tr.addCell(new SimpleDateFormat("yyyy.MM.dd HH:mm").format(de.dateStart) + "-" + new SimpleDateFormat("yyyy.MM.dd HH:mm").format(de.dateStop) + ": " + de.value + "; Превышение ПДК " + de.tlv + " " + de.parameter.getName() + " на " + de.station.getName());
                         }
                     } else {
                         tr.addCell(de.value);
                         if (de.tlv != null) {
-                            tr.addCell(new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(de.dateStart) + "-" + new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(de.dateStop) + ": " + de.value + "; Нет превышения ПДК " + de.tlv + " " + de.parameter.getName() + " на " + de.station.getName());
+                            tr.addCell(new SimpleDateFormat("yyyy.MM.dd HH:mm").format(de.dateStart) + "-" + new SimpleDateFormat("yyyy.MM.dd HH:mm").format(de.dateStop) + ": " + de.value + "; Нет превышения ПДК " + de.tlv + " " + de.parameter.getName() + " на " + de.station.getName());
                         }
                         tr.addCell(Value.getNullValueFromValueType(ValueType.NUMBER));
                         tr.addCell(Value.getNullValueFromValueType(ValueType.TEXT));
@@ -186,12 +186,12 @@ public class DataExtractorServlet extends DataSourceServlet {
                         tr.addCell(Value.getNullValueFromValueType(ValueType.TEXT));
                         tr.addCell(de.value);
                         if (de.tlv != null) {
-                            tr.addCell(new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(de.dateStart) + "-" + new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(de.dateStop) + ": " + de.value + "; Превышение ПДК " + de.tlv + " " + de.parameter.getName() + " на " + de.station.getName());
+                            tr.addCell(new SimpleDateFormat("yyyy.MM.dd HH:mm").format(de.dateStart) + "-" + new SimpleDateFormat("yyyy.MM.dd HH:mm").format(de.dateStop) + ": " + de.value + "; Превышение ПДК " + de.tlv + " " + de.parameter.getName() + " на " + de.station.getName());
                         }
                     } else {
                         tr.addCell(de.value);
                         if (de.tlv != null) {
-                            tr.addCell(new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(de.dateStart) + "-" + new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(de.dateStop) + ": " + de.value + "; Нет превышения ПДК " + de.tlv + " " + de.parameter.getName() + " на " + de.station.getName());
+                            tr.addCell(new SimpleDateFormat("yyyy.MM.dd HH:mm").format(de.dateStart) + "-" + new SimpleDateFormat("yyyy.MM.dd HH:mm").format(de.dateStop) + ": " + de.value + "; Нет превышения ПДК " + de.tlv + " " + de.parameter.getName() + " на " + de.station.getName());
                         }
                         tr.addCell(Value.getNullValueFromValueType(ValueType.NUMBER));
                         tr.addCell(Value.getNullValueFromValueType(ValueType.TEXT));
