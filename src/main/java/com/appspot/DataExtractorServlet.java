@@ -161,22 +161,42 @@ public class DataExtractorServlet extends DataSourceServlet {
                 int day = cal.get(Calendar.DAY_OF_MONTH);
 
                 tr.addCell(new DateTimeValue(Integer.parseInt(new SimpleDateFormat("yyyy").format(de.dateStart)), Integer.parseInt(new SimpleDateFormat("MM").format(de.dateStart)) - 1, Integer.parseInt(new SimpleDateFormat("dd").format(de.dateStart)), Integer.parseInt(new SimpleDateFormat("HH").format(de.dateStart)), Integer.parseInt(new SimpleDateFormat("mm").format(de.dateStart)), Integer.parseInt(new SimpleDateFormat("ss").format(de.dateStart)), Integer.parseInt(new SimpleDateFormat("S").format(de.dateStart))));
-                if (de.tlvExceds==null||de.tlvExceds) {
-                    tr.addCell(Value.getNullValueFromValueType(ValueType.NUMBER));
-                    tr.addCell(Value.getNullValueFromValueType(ValueType.TEXT));
-                    tr.addCell(de.value);
-                    if (de.tlv != null) {
-                        tr.addCell(new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(de.dateStart) + "-" + new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(de.dateStop) + ": " + de.value + "; Превышение ПДК " + de.tlv + " " + de.parameter.getName() + " на " + de.station.getName());
-                    }
-                } else {
-                    tr.addCell(de.value);
-                    if (de.tlv != null) {
-                        tr.addCell(new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(de.dateStart) + "-" + new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(de.dateStop) + ": " + de.value + "; Нет превышения ПДК " + de.tlv + " " + de.parameter.getName() + " на " + de.station.getName());
-                    }
-                    tr.addCell(Value.getNullValueFromValueType(ValueType.NUMBER));
-                    tr.addCell(Value.getNullValueFromValueType(ValueType.TEXT));
-                }
 
+                if (de.tlvExceds==null)
+                {
+                    if (de.value>de.tlv) {
+                        tr.addCell(Value.getNullValueFromValueType(ValueType.NUMBER));
+                        tr.addCell(Value.getNullValueFromValueType(ValueType.TEXT));
+                        tr.addCell(de.value);
+                        if (de.tlv != null) {
+                            tr.addCell(new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(de.dateStart) + "-" + new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(de.dateStop) + ": " + de.value + "; Превышение ПДК " + de.tlv + " " + de.parameter.getName() + " на " + de.station.getName());
+                        }
+                    } else {
+                        tr.addCell(de.value);
+                        if (de.tlv != null) {
+                            tr.addCell(new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(de.dateStart) + "-" + new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(de.dateStop) + ": " + de.value + "; Нет превышения ПДК " + de.tlv + " " + de.parameter.getName() + " на " + de.station.getName());
+                        }
+                        tr.addCell(Value.getNullValueFromValueType(ValueType.NUMBER));
+                        tr.addCell(Value.getNullValueFromValueType(ValueType.TEXT));
+                    }
+                }
+                else {
+                    if (de.tlvExceds) {
+                        tr.addCell(Value.getNullValueFromValueType(ValueType.NUMBER));
+                        tr.addCell(Value.getNullValueFromValueType(ValueType.TEXT));
+                        tr.addCell(de.value);
+                        if (de.tlv != null) {
+                            tr.addCell(new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(de.dateStart) + "-" + new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(de.dateStop) + ": " + de.value + "; Превышение ПДК " + de.tlv + " " + de.parameter.getName() + " на " + de.station.getName());
+                        }
+                    } else {
+                        tr.addCell(de.value);
+                        if (de.tlv != null) {
+                            tr.addCell(new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(de.dateStart) + "-" + new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(de.dateStop) + ": " + de.value + "; Нет превышения ПДК " + de.tlv + " " + de.parameter.getName() + " на " + de.station.getName());
+                        }
+                        tr.addCell(Value.getNullValueFromValueType(ValueType.NUMBER));
+                        tr.addCell(Value.getNullValueFromValueType(ValueType.TEXT));
+                    }
+                }
                 data.addRow(tr);
 
                 //data.addRowFromValues(new DateValue(calendar),12,-1);
