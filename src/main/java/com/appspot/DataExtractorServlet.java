@@ -103,6 +103,7 @@ public class DataExtractorServlet extends DataSourceServlet {
                             .ancestor(new MeasurementStation(station)).
                                     filter("dateStart <= ", to.getTime()).
                                     filter("dateStart >= ", from.getTime()).
+                                    filter("parameterString = ", parameter).
                             //.orderKey(true)
                             //.limit(count)             // Only show 5 of them.
                                     list();
@@ -123,9 +124,9 @@ public class DataExtractorServlet extends DataSourceServlet {
                     datasets = ObjectifyService.ofy()
                             .load()
                             .type(Measurement.class).
-                                    filter("parameterString = ", parameter).
                                     filter("dateStart <= ", to.getTime()).
                                     filter("dateStart >= ", from.getTime()).
+                                    filter("parameterString = ", parameter).
                                     list();
                 } else {
                     System.out.println("2-1");
@@ -160,7 +161,7 @@ public class DataExtractorServlet extends DataSourceServlet {
                 int day = cal.get(Calendar.DAY_OF_MONTH);
 
                 tr.addCell(new DateTimeValue(Integer.parseInt(new SimpleDateFormat("yyyy").format(de.dateStart)), Integer.parseInt(new SimpleDateFormat("MM").format(de.dateStart)) - 1, Integer.parseInt(new SimpleDateFormat("dd").format(de.dateStart)), Integer.parseInt(new SimpleDateFormat("HH").format(de.dateStart)), Integer.parseInt(new SimpleDateFormat("mm").format(de.dateStart)), Integer.parseInt(new SimpleDateFormat("ss").format(de.dateStart)), Integer.parseInt(new SimpleDateFormat("S").format(de.dateStart))));
-                if (de.tlvExceds) {
+                if (de.tlvExceds==null||de.tlvExceds) {
                     tr.addCell(Value.getNullValueFromValueType(ValueType.NUMBER));
                     tr.addCell(Value.getNullValueFromValueType(ValueType.TEXT));
                     tr.addCell(de.value);
