@@ -228,7 +228,7 @@ public class ParsePollutionServlet extends HttpServlet {
                             String[] measurementParameter = parameterName.split(",");
                             String measure = cols.get(1).text();
                             String time = cols.get(2).text();
-                            String pdk1 = cols.get(3).text();
+                            String pdk1 = cols.get(3).text(); //это не ПДК! это показание во сколько раз измерение меньше, чем ПДК! значит, для получения пдк надо показание делить на это значение
 
                             System.out.println(time.trim());
                             if (!time.trim().equals("")) {
@@ -244,7 +244,7 @@ public class ParsePollutionServlet extends HttpServlet {
                                 measure_date = cal.getTime();
 
                                 if (measured != null) {
-                                    Measurement measurement = new Measurement(dateManual1, dateManual2, measure_date, measured, Double.parseDouble(pdk1), measurementParameter[0],  measurementParameter[1],mesurementStationName);
+                                    Measurement measurement = new Measurement(dateManual1, dateManual2, measure_date, measured, measured/Double.parseDouble(pdk1), measurementParameter[0],  measurementParameter[1],mesurementStationName);
                                     mes.add(measurement);
                                 }
                             }
