@@ -104,7 +104,7 @@ public class EmailAReportServlet extends HttpServlet {
         cellStyleDate.setDataFormat(createHelper.createDataFormat().getFormat("m/d/yy h:mm"));
 
         CellStyle cellStyleAlert = wb.createCellStyle();
-        cellStyleAlert.setFillForegroundColor(IndexedColors.RED.getIndex());
+        cellStyleAlert.setFillBackgroundColor(IndexedColors.RED.getIndex());
 
         for (Date date : datesForGrid) {
             i++;
@@ -117,12 +117,13 @@ public class EmailAReportServlet extends HttpServlet {
         int rowIndex=0;
 
         for (List<Measurement> lsm : datasets) {
-            rowIndex++;
             if (lsm.size() > 0 && lsm.get(0) != null) {
                 //System.out.print(lsm.get(0).station + "\t");
+                rowIndex++;
                 row = sheet.createRow(rowIndex);
+                System.out.println(lsm.get(0).station.toString()+" "+lsm.size());
                 Cell station_and_parameter=row.createCell(0);
-                station_and_parameter.setCellValue(lsm.get(0).station.getName()+':'+lsm.get(0).parameterString);
+                station_and_parameter.setCellValue(lsm.get(0).station.getName()+':'+lsm.get(0).parameterString+" ПДК: "+lsm.get(0).tlv);
                 int cellIndex=0;
                 for (Date date : datesForGrid) {
                     cellIndex++;
@@ -133,10 +134,8 @@ public class EmailAReportServlet extends HttpServlet {
                             if (ms.tlvExceds)
                             current.setCellStyle(cellStyleAlert);
                         }
-                        System.out.print("\t");
                     }
                 }
-                System.out.println();
             }
         }
 
@@ -149,6 +148,9 @@ public class EmailAReportServlet extends HttpServlet {
             msg.setFrom(new InternetAddress("ilya.evlampiev@gmail.com", "Архив измерений загрязнения воздуха"));
             msg.addRecipient(Message.RecipientType.TO,
                     new InternetAddress("eljah@mail.ru", "admin"));
+            msg.addRecipient(Message.RecipientType.TO,
+                    new InternetAddress("nelbik@gmail.com", "Nelya"));
+            //
             msg.setSubject("Недельный архив измерений с "+sevenDaysAgo+" до "+new Date());
             msg.setText("This is a test");
 
