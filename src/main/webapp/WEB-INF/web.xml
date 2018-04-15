@@ -10,6 +10,16 @@
     </welcome-file-list>
 
     <servlet>
+        <servlet-name>EmailServlet</servlet-name>
+        <servlet-class>com.appspot.EmailAReportServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>EmailServlet</servlet-name>
+        <url-pattern>/email</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
         <servlet-name>PollutionServlet</servlet-name>
         <servlet-class>com.appspot.ParsePollutionServlet</servlet-class>
     </servlet>

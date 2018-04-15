@@ -6,7 +6,7 @@
 
 <html>
 <head>
-    <title>Архив уровней Волги по данным водомерных постов имени Эрнста Галимовича Улумбекова</title>
+    <title>Архив загрязнения воздуха в Казани</title>
     <meta charset="UTF-8">
     <!--Load the AJAX API-->
     <script type="text/javascript" src="http://www.google.com/jsapi"></script>
@@ -30,7 +30,7 @@
             }
 
             var options = {
-                title: 'Уровень воды, м',
+                title: 'Показатели',
                 tooltip: {isHtml: true},
 
                 //vAxis: {title: 'level', minValue: 0, maxValue: 15},
