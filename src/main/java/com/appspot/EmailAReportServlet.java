@@ -65,29 +65,29 @@ public class EmailAReportServlet extends HttpServlet {
             }
         }
 
-        System.out.print("Dates\t");
-
-        for (Date date : datesForGrid) {
-            System.out.print(date + "\t");
-
-        }
-        System.out.println();
-        for (List<Measurement> lsm : datasets) {
-            if (lsm.size() > 0 && lsm.get(0) != null) {
-                System.out.print(lsm.get(0).station + "\t");
-                for (Date date : datesForGrid) {
-                    for (Measurement ms : lsm) {
-                        if (ms.dateStartDate.equals(date)) {
-                            System.out.print(ms.value);
-                            if (ms.tlvExceds)
-                            {System.out.print("(!)");}
-                        }
-                        System.out.print("\t");
-                    }
-                }
-                System.out.println();
-            }
-        }
+//        System.out.print("Dates\t");
+//
+//        for (Date date : datesForGrid) {
+//            System.out.print(date + "\t");
+//
+//        }
+//        System.out.println();
+//        for (List<Measurement> lsm : datasets) {
+//            if (lsm.size() > 0 && lsm.get(0) != null) {
+//                System.out.print(lsm.get(0).station + "\t");
+//                for (Date date : datesForGrid) {
+//                    for (Measurement ms : lsm) {
+//                        if (ms.dateStartDate.equals(date)) {
+//                            System.out.print(ms.value);
+//                            if (ms.tlvExceds)
+//                            {System.out.print("(!)");}
+//                        }
+//                        System.out.print("\t");
+//                    }
+//                }
+//                System.out.println();
+//            }
+//        }
 
         Workbook wb = new HSSFWorkbook();
         Sheet sheet = wb.createSheet();
@@ -100,13 +100,44 @@ public class EmailAReportServlet extends HttpServlet {
         cell.setCellValue("Дата и время");
         int i=0;
 
+        CellStyle cellStyleDate = wb.createCellStyle();
+        cellStyleDate.setDataFormat(createHelper.createDataFormat().getFormat("m/d/yy h:mm"));
+
+        CellStyle cellStyleAlert = wb.createCellStyle();
+        cellStyleAlert.setFillForegroundColor(IndexedColors.RED.getIndex());
+
         for (Date date : datesForGrid) {
             i++;
             cell = row.createCell(i);
             cell.setCellValue(date);
-            CellStyle cellStyle = wb.createCellStyle();
-            cellStyle.setDataFormat(createHelper.createDataFormat().getFormat("m/d/yy h:mm"));
-            cell.setCellStyle(cellStyle);
+
+            cell.setCellStyle(cellStyleDate);
+        }
+
+        int rowIndex=0;
+
+        for (List<Measurement> lsm : datasets) {
+            rowIndex++;
+            if (lsm.size() > 0 && lsm.get(0) != null) {
+                //System.out.print(lsm.get(0).station + "\t");
+                row = sheet.createRow(rowIndex);
+                Cell station_and_parameter=row.createCell(0);
+                station_and_parameter.setCellValue(lsm.get(0).station.getName()+':'+lsm.get(0).parameterString);
+                int cellIndex=0;
+                for (Date date : datesForGrid) {
+                    cellIndex++;
+                    Cell current=row.createCell(cellIndex);
+                    for (Measurement ms : lsm) {
+                        if (ms.dateStartDate.equals(date)) {
+                            current.setCellValue(ms.value);
+                            if (ms.tlvExceds)
+                            current.setCellStyle(cellStyleAlert);
+                        }
+                        System.out.print("\t");
+                    }
+                }
+                System.out.println();
+            }
         }
 
 
@@ -115,19 +146,22 @@ public class EmailAReportServlet extends HttpServlet {
 
         try {
             Message msg = new MimeMessage(session);
-            msg.setFrom(new InternetAddress("ilya.evlampiev@gmail.com", "Архив уровней воды"));
+            msg.setFrom(new InternetAddress("ilya.evlampiev@gmail.com", "Архив измерений загрязнения воздуха"));
             msg.addRecipient(Message.RecipientType.TO,
                     new InternetAddress("eljah@mail.ru", "admin"));
-            msg.setSubject("Your Example.com account has been activated");
+            msg.setSubject("Недельный архив измерений с "+sevenDaysAgo+" до "+new Date());
             msg.setText("This is a test");
 
-            String htmlBody = "";          // ...
+            String htmlBody = "Недельный архив измерений с "+sevenDaysAgo+" до "+new Date();          // ...
             byte[] attachmentData = new byte[]{};  // ...
             Multipart mp = new MimeMultipart();
 
+            MimeBodyPart textPart = new MimeBodyPart();
+            textPart.setText("Недельный архив измерений с "+sevenDaysAgo+" до "+new Date(), "utf-8");
+            mp.addBodyPart(textPart);
+
             MimeBodyPart htmlPart = new MimeBodyPart();
-            htmlPart.setText("Недельный архив измерений с "+sevenDaysAgo+" до "+new Date());
-            htmlPart.setContent(htmlBody, "text/html");
+            htmlPart.setContent(htmlBody, "text/html; charset=utf-8");
             mp.addBodyPart(htmlPart);
 
             MimeBodyPart attachment = new MimeBodyPart();
