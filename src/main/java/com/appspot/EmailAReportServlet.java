@@ -105,6 +105,8 @@ public class EmailAReportServlet extends HttpServlet {
 
         CellStyle cellStyleAlert = wb.createCellStyle();
         cellStyleAlert.setFillBackgroundColor(IndexedColors.RED.getIndex());
+        cellStyleAlert.setFillPattern(CellStyle.SOLID_FOREGROUND);
+        cellStyleAlert.setBottomBorderColor(IndexedColors.RED.getIndex());
 
         for (Date date : datesForGrid) {
             i++;
