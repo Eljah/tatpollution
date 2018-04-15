@@ -81,7 +81,7 @@ public class ParsePollutionServlet extends HttpServlet {
             Pattern pattern = Pattern.compile(".*?Placemark\\(\\[(\\d{2}\\.\\d+),.*?(\\d{2}.\\d+)\\].*?\\{.*?balloonContent:.*?'(<b.*?>.*?table>)'.*?\\}", Pattern.DOTALL);
             Matcher matcher = pattern.matcher(elementWithYmap.toString().replaceAll("[\n\r]", ""));
 
-            Pattern pattern2 = Pattern.compile("(<b.*?>(.*?)<\\/b>)(?:.*?(\\d{2}\\.\\d{2}\\.\\d{4}).*?(<table.*?>.*?<\\/table>))?(?:.*?(\\d{2}\\.\\d{2}\\s*?\\d{2}\\.\\d{2}\\.\\d{2}).*?(\\d{2}\\.\\d{2}\\s*?\\d{2}\\.\\d{2}\\.\\d{2}).*?(<table.*?>.*?<\\/table>))?", Pattern.DOTALL);
+            Pattern pattern2 = Pattern.compile("(<b.*?>(.*?)<\\/b>)(?:[^{}]*?(\\d{2}\\.\\d{2}\\.\\d{4})[^{}]*?(<table.*?>.*?<\\/table>))?[^{}](?:[^{}]*?(\\d{2}\\.\\d{2}\\s*?\\d{2}\\.\\d{2}\\.\\d{2}).*?(\\d{2}\\.\\d{2}\\s*?\\d{2}\\.\\d{2}\\.\\d{2})[^{}]*?(<table.*?>.*?<\\/table>))?", Pattern.DOTALL);
 
             while (matcher.find()) {
                 System.out.println("0:" + matcher.group(0));
