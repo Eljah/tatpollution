@@ -42,7 +42,7 @@ public class ParsePollutionServlet extends HttpServlet {
 
         ArrayList<Measurement> mes = new ArrayList<Measurement>();
 
-        MemcacheServiceFactory.getMemcacheService().clearAll(); //clearing cache since we are updating the db
+        //MemcacheServiceFactory.getMemcacheService().clearAll(); //clearing cache since we are updating the db
 
         String specificFile = req.getParameter("file");
         String specificDate = req.getParameter("date");

@@ -32,6 +32,7 @@ public class OfyHelper implements ServletContextListener {
     ObjectifyService.register(Measurement.class);
     ObjectifyService.register(MeasurementParameter.class);
     ObjectifyService.register(MeasurementStation.class);
+    ObjectifyService.register(MeasurementTLVExceedNotification.class);
   }
 
   public void contextInitialized(ServletContextEvent event) {
