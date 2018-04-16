@@ -128,7 +128,7 @@ public class Measurement implements Serializable {
                 long OWNER = Long.parseLong(prop.getProperty("owner"));
                 TgBotApi api = new TgBotApi(TOKEN, OWNER);
 
-                DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM, new Locale("ru"));
+                DateFormat df = DateFormat.getDateInstance(DateFormat.LONG, new Locale("ru"));
                 String formattedStartDate = df.format(dateStart);
                 String formattedStopDate = df.format(dateStop);
                 try {
