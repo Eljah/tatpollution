@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static jdk.nashorn.internal.runtime.regexp.joni.Syntax.Java;
@@ -128,9 +129,10 @@ public class Measurement implements Serializable {
                 long OWNER = Long.parseLong(prop.getProperty("owner"));
                 TgBotApi api = new TgBotApi(TOKEN, OWNER);
 
-                DateFormat df = DateFormat.getDateInstance(DateFormat.LONG, new Locale("ru"));
-                String formattedStartDate = df.format(dateStart);
-                String formattedStopDate = df.format(dateStop);
+                //DateFormat df = DateFormat.getDateInstance(DateFormat.FULL, new Locale("ru"));
+                SimpleDateFormat simpleDateFormat=new SimpleDateFormat("dd MMMMM yyyy HH:mm",new Locale("ru"));
+                String formattedStartDate = simpleDateFormat.format(dateStart);
+                String formattedStopDate = simpleDateFormat.format(dateStop);
                 try {
                     api.sendMessage("@tatpollution", "Превышение предельно допустимого показателя " + tlv + " на станции " + station + " для параметра " + parameter + " по измерениям " + formattedStartDate + "-" + formattedStopDate + " в " + value / tlv + " раз");
                 } catch (IOException e1) {
