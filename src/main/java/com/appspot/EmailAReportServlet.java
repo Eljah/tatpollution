@@ -101,7 +101,7 @@ public class EmailAReportServlet extends HttpServlet {
 
         Cell cell2 = row.createCell(1);
         cell2.setCellValue("ПДК, единицы измерения");
-        int i=0;
+        int i = 0;
 
         CellStyle cellStyleDate = wb.createCellStyle();
         cellStyleDate.setDataFormat(createHelper.createDataFormat().getFormat("m/d/yy h:mm"));
@@ -124,32 +124,42 @@ public class EmailAReportServlet extends HttpServlet {
             cell.setCellStyle(cellStyleDate);
         }
 
-        int rowIndex=0;
+        int rowIndex = 0;
+
 
         for (List<Measurement> lsm : datasets) {
             if (lsm.size() > 0 && lsm.get(0) != null) {
                 //System.out.print(lsm.get(0).station + "\t");
                 rowIndex++;
                 row = sheet.createRow(rowIndex);
-                System.out.println(lsm.get(0).station.toString()+" "+lsm.size());
-                Cell station_and_parameter=row.createCell(0);
-                station_and_parameter.setCellValue(lsm.get(0).station.getName()+':'+lsm.get(0).parameterString+" ПДК: "+lsm.get(0).tlv);
-                Cell tlv=row.createCell(1);
-                tlv.setCellValue(lsm.get(0).tlv+", "+lsm.get(0).unit);
+                System.out.println(lsm.get(0).station.toString() + " " + lsm.size());
+                Cell station_and_parameter = row.createCell(0);
+                Cell tlv = row.createCell(1);
 
-                int cellIndex=1;
+                int cellIndex = 1;
+                Measurement last = null;
                 for (Date date : datesForGrid) {
                     cellIndex++;
-                    Cell current=row.createCell(cellIndex);
+                    Cell current = row.createCell(cellIndex);
                     for (Measurement ms : lsm) {
                         if (ms.dateStartDate.equals(date)) {
                             current.setCellValue(ms.value);
-                            if (ms.tlvApproached)
-                                current.setCellStyle(cellStyleAlertApproach);
+                            if (ms.tlvApproached != null) {
+                                if (ms.tlvApproached)
+                                    current.setCellStyle(cellStyleAlertApproach);
+                            }
                             if (ms.tlvExceds)
                                 current.setCellStyle(cellStyleAlert);
                         }
+                        last = ms;
                     }
+                }
+                if (last != null) {
+                    station_and_parameter.setCellValue(last.station.getName() + ':' + last.parameterString);
+                    if (last.unit != null) {
+                        tlv.setCellValue(last.tlv + ", " + last.unit);
+                    } else
+                        tlv.setCellValue(last.tlv);
                 }
             }
         }
@@ -166,15 +176,15 @@ public class EmailAReportServlet extends HttpServlet {
             msg.addRecipient(Message.RecipientType.TO,
                     new InternetAddress("nelbik@gmail.com", "Nelya"));
             //
-            msg.setSubject("Недельный архив измерений с "+sevenDaysAgo+" до "+new Date());
+            msg.setSubject("Недельный архив измерений с " + sevenDaysAgo + " до " + new Date());
             msg.setText("This is a test");
 
-            String htmlBody = "Недельный архив измерений с "+sevenDaysAgo+" до "+new Date();          // ...
+            String htmlBody = "Недельный архив измерений с " + sevenDaysAgo + " до " + new Date();          // ...
             byte[] attachmentData = new byte[]{};  // ...
             Multipart mp = new MimeMultipart();
 
             MimeBodyPart textPart = new MimeBodyPart();
-            textPart.setText("Недельный архив измерений с "+sevenDaysAgo+" до "+new Date(), "utf-8");
+            textPart.setText("Недельный архив измерений с " + sevenDaysAgo + " до " + new Date(), "utf-8");
             mp.addBodyPart(textPart);
 
             MimeBodyPart htmlPart = new MimeBodyPart();
@@ -184,9 +194,9 @@ public class EmailAReportServlet extends HttpServlet {
             MimeBodyPart attachment = new MimeBodyPart();
             ByteArrayOutputStream attachmentDataStream = new ByteArrayOutputStream();
             wb.write(attachmentDataStream);
-            attachmentData=attachmentDataStream.toByteArray();
+            attachmentData = attachmentDataStream.toByteArray();
             InputStream attachmentDataStream2 = new ByteArrayInputStream(attachmentData);
-            attachment.setFileName("report"+sevenDaysAgo+".xls");
+            attachment.setFileName("report" + sevenDaysAgo + ".xls");
             attachment.setContent(attachmentDataStream2, "application/vnd.ms-excel");
             mp.addBodyPart(attachment);
             msg.setContent(mp);
