@@ -98,15 +98,23 @@ public class EmailAReportServlet extends HttpServlet {
 
         Cell cell = row.createCell(0);
         cell.setCellValue("Дата и время");
+
+        Cell cell2 = row.createCell(1);
+        cell2.setCellValue("ПДК, единицы измерения");
         int i=0;
 
         CellStyle cellStyleDate = wb.createCellStyle();
         cellStyleDate.setDataFormat(createHelper.createDataFormat().getFormat("m/d/yy h:mm"));
 
         CellStyle cellStyleAlert = wb.createCellStyle();
-        cellStyleAlert.setFillBackgroundColor(IndexedColors.RED.getIndex());
+        cellStyleAlert.setFillForegroundColor(IndexedColors.RED.getIndex());
         cellStyleAlert.setFillPattern(CellStyle.SOLID_FOREGROUND);
         cellStyleAlert.setBottomBorderColor(IndexedColors.RED.getIndex());
+
+        CellStyle cellStyleAlertApproach = wb.createCellStyle();
+        cellStyleAlertApproach.setFillForegroundColor(IndexedColors.PINK.getIndex());
+        cellStyleAlertApproach.setFillPattern(CellStyle.SOLID_FOREGROUND);
+        cellStyleAlertApproach.setBottomBorderColor(IndexedColors.PINK.getIndex());
 
         for (Date date : datesForGrid) {
             i++;
@@ -126,15 +134,20 @@ public class EmailAReportServlet extends HttpServlet {
                 System.out.println(lsm.get(0).station.toString()+" "+lsm.size());
                 Cell station_and_parameter=row.createCell(0);
                 station_and_parameter.setCellValue(lsm.get(0).station.getName()+':'+lsm.get(0).parameterString+" ПДК: "+lsm.get(0).tlv);
-                int cellIndex=0;
+                Cell tlv=row.createCell(1);
+                tlv.setCellValue(lsm.get(0).tlv+", "+lsm.get(0).unit);
+
+                int cellIndex=1;
                 for (Date date : datesForGrid) {
                     cellIndex++;
                     Cell current=row.createCell(cellIndex);
                     for (Measurement ms : lsm) {
                         if (ms.dateStartDate.equals(date)) {
                             current.setCellValue(ms.value);
+                            if (ms.tlvApproached)
+                                current.setCellStyle(cellStyleAlertApproach);
                             if (ms.tlvExceds)
-                            current.setCellStyle(cellStyleAlert);
+                                current.setCellStyle(cellStyleAlert);
                         }
                     }
                 }
