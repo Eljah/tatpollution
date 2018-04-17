@@ -37,7 +37,7 @@ public class IframeServlet extends HttpServlet {
         }
 
         for (Measurement m : measurementList) {
-            Measurement m2=new Measurement(new Date(m.dateStart), new Date(m.dateStop), new Date(m.dateConcrete), m.value, m.tlv, m.parameter.getName(),m.parameter.getName(), m.station.getName());
+            Measurement m2=new Measurement(new Float(m.latitude),new Float(m.longitude),new Date(m.dateStart), new Date(m.dateStop), new Date(m.dateConcrete), m.value, m.tlv, m.parameter.getName(),m.parameter.getName(), m.station.getName());
             if (req.getParameter("debug") != null) {
                 wr.println(m.stationAndParameterAndDate + "is deleted");
             }

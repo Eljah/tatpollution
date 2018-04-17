@@ -39,6 +39,17 @@ public class MeasurementTLVExceedNotification implements Serializable {
     public Double tlv;
     @Index
     public Boolean tlvExceds;
+    @Index
+    public Boolean tlvApproached;
+    @Index
+    public String city;
+    @Index
+    public Float latitude;
+    @Index
+    public Float longitude;
+    @Index
+    public String unit;
+
 
     MeasurementTLVExceedNotification()
     {}

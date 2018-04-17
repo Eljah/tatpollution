@@ -36,7 +36,7 @@ public class WelcomeServlet extends HttpServlet {
         from = cal.getTime();
 
         Calendar cal2 = Calendar.getInstance();
-        cal2.setTime(from);
+        cal2.setTime(to);
         cal2.add(Calendar.DATE, 1);
         to = cal2.getTime();
 

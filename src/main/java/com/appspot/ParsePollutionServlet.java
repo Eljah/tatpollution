@@ -81,7 +81,7 @@ public class ParsePollutionServlet extends HttpServlet {
             Pattern pattern = Pattern.compile(".*?Placemark\\(\\[(\\d{2}\\.\\d+),.*?(\\d{2}.\\d+)\\].*?\\{.*?balloonContent:.*?'(<b.*?>.*?table>)'.*?\\}", Pattern.DOTALL);
             Matcher matcher = pattern.matcher(elementWithYmap.toString().replaceAll("[\n\r]", ""));
 
-            Pattern pattern2 = Pattern.compile("(<b.*?>(.*?)<\\/b>)(?:[^{}]*?(\\d{2}\\.\\d{2}\\.\\d{4})[^{}]*?(<table.*?>.*?<\\/table>))?[^{}](?:[^{}]*?(\\d{2}\\.\\d{2}\\s*?\\d{2}\\.\\d{2}\\.\\d{2}).*?(\\d{2}\\.\\d{2}\\s*?\\d{2}\\.\\d{2}\\.\\d{2})[^{}]*?(<table.*?>.*?<\\/table>))?", Pattern.DOTALL);
+            Pattern pattern2 = Pattern.compile("(?:.*?Placemark\\(\\[(\\d{2}\\.\\d+),.*?(\\d{2}.\\d+)\\].*?<b.*?>(.*?)<\\/b>)(?:[^{}]*?(\\d{2}\\.\\d{2}\\.\\d{4})[^{}]*?(<table.*?>.*?<\\/table>))?[^{}](?:[^{}]*?(\\d{2}\\.\\d{2}\\s*?\\d{2}\\.\\d{2}\\.\\d{2}).*?(\\d{2}\\.\\d{2}\\s*?\\d{2}\\.\\d{2}\\.\\d{2})[^{}]*?(<table.*?>.*?<\\/table>))?", Pattern.DOTALL);
 
             while (matcher.find()) {
                 System.out.println("0:" + matcher.group(0));
@@ -89,19 +89,22 @@ public class ParsePollutionServlet extends HttpServlet {
                 System.out.println("1:" + matcher.group(2));
                 System.out.println("2:" + matcher.group(3));
 
-                Matcher matcher2 = pattern2.matcher(matcher.group(3));
+                Matcher matcher2 = pattern2.matcher(matcher.group(0));
                 while (matcher2.find()) {
-                    System.out.println("1:" + matcher2.group(1));
-                    System.out.println("2:" + matcher2.group(2));
-                    String mesurementStationName = matcher2.group(2);
-                    MeasurementStation measurementStation = new MeasurementStation(mesurementStationName);
+                    System.out.println("coords1:" + matcher2.group(1));
+                    Float latitude=Float.parseFloat(matcher2.group(1));
+                    System.out.println("coords2:" + matcher2.group(2));
+                    Float longitude=Float.parseFloat(matcher2.group(2));
                     System.out.println("3:" + matcher2.group(3));
+                    String mesurementStationName = matcher2.group(3);
+                    MeasurementStation measurementStation = new MeasurementStation(mesurementStationName);
+                    System.out.println("4:" + matcher2.group(4));
                     Date dateAutomated = null;
-                    if (matcher2.group(3) != null) {
+                    if (matcher2.group(4) != null) {
                         try {
                             SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
                             sdf.setTimeZone(TimeZone.getTimeZone("MSK"));
-                            dateAutomated = sdf.parse(matcher2.group(3));
+                            dateAutomated = sdf.parse(matcher2.group(4));
                         } catch (ParseException e) {
                             e.printStackTrace();
 
@@ -110,9 +113,9 @@ public class ParsePollutionServlet extends HttpServlet {
                     System.out.println(dateAutomated);
 
 
-                    System.out.println("4:" + matcher2.group(4));
-                    if (matcher2.group(4) != null) {
-                        Document doc = Jsoup.parse(matcher2.group(4));
+                    System.out.println("5:" + matcher2.group(5));
+                    if (matcher2.group(5) != null) {
+                        Document doc = Jsoup.parse(matcher2.group(5));
                         Element table = doc.select("table").get(0); //select the first table.
                         Elements rows = table.select("tr");
 
@@ -159,54 +162,40 @@ public class ParsePollutionServlet extends HttpServlet {
                             cal.add(Calendar.HOUR, 8);
                             Date mes1dateend = cal.getTime();
                             if (measure1d != null) {
-                                Measurement measurement1 = new Measurement(dateAutomated, mes1dateend, dateAutomated, measure1d, Double.parseDouble(pdk1), measurementParameter[0],measurementParameter[1], mesurementStationName);
+                                Measurement measurement1 = new Measurement(latitude,longitude,dateAutomated, mes1dateend, dateAutomated, measure1d, Double.parseDouble(pdk1), measurementParameter[0],measurementParameter[1], mesurementStationName);
                                 mes.add(measurement1);
                             }
                             cal.add(Calendar.HOUR, 8);
                             Date mes2dateend = cal.getTime();
                             if (measure2d != null) {
-                                Measurement measurement2 = new Measurement(mes1dateend, mes2dateend, mes1dateend, measure2d, Double.parseDouble(pdk1), measurementParameter[0],measurementParameter[1], mesurementStationName);
+                                Measurement measurement2 = new Measurement(latitude,longitude,mes1dateend, mes2dateend, mes1dateend, measure2d, Double.parseDouble(pdk1), measurementParameter[0],measurementParameter[1], mesurementStationName);
                                 mes.add(measurement2);
                             }
                             cal.add(Calendar.HOUR, 8);
                             Date mes3dateend = cal.getTime();
 
                             if (measure3d != null) {
-                                Measurement measurement3 = new Measurement(mes2dateend, mes3dateend, mes2dateend, measure3d, Double.parseDouble(pdk1), measurementParameter[0],measurementParameter[1], mesurementStationName);
+                                Measurement measurement3 = new Measurement(latitude,longitude,mes2dateend, mes3dateend, mes2dateend, measure3d, Double.parseDouble(pdk1), measurementParameter[0],measurementParameter[1], mesurementStationName);
                                 mes.add(measurement3);
                             }
                             cal.add(Calendar.HOUR, 8);
                             Date mes4dateend = cal.getTime();
 
                             if (measure4d != null) {
-                                Measurement measurement4 = new Measurement(mes3dateend, mes4dateend, mes3dateend, measure4d, Double.parseDouble(pdk1), measurementParameter[0],measurementParameter[1], mesurementStationName);
+                                Measurement measurement4 = new Measurement(latitude,longitude,mes3dateend, mes4dateend, mes3dateend, measure4d, Double.parseDouble(pdk1), measurementParameter[0],measurementParameter[1], mesurementStationName);
                                 mes.add(measurement4);
                             }
 
                         }
                     }
-                    System.out.println("5:" + matcher2.group(5));
-
-                    Date dateManual1 = null;
-                    if (matcher2.group(5) != null) {
-                        try {
-                            SimpleDateFormat sdf = new SimpleDateFormat("hh.mm dd.MM.yy");
-                            sdf.setTimeZone(TimeZone.getTimeZone("MSK"));
-                            dateManual1 = sdf.parse(matcher2.group(5));
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-
-                        }
-                    }
-
                     System.out.println("6:" + matcher2.group(6));
 
-                    Date dateManual2 = null;
+                    Date dateManual1 = null;
                     if (matcher2.group(6) != null) {
                         try {
                             SimpleDateFormat sdf = new SimpleDateFormat("hh.mm dd.MM.yy");
                             sdf.setTimeZone(TimeZone.getTimeZone("MSK"));
-                            dateManual2 = sdf.parse(matcher2.group(6));
+                            dateManual1 = sdf.parse(matcher2.group(6));
                         } catch (ParseException e) {
                             e.printStackTrace();
 
@@ -215,8 +204,22 @@ public class ParsePollutionServlet extends HttpServlet {
 
                     System.out.println("7:" + matcher2.group(7));
 
+                    Date dateManual2 = null;
                     if (matcher2.group(7) != null) {
-                        Document doc = Jsoup.parse(matcher2.group(7));
+                        try {
+                            SimpleDateFormat sdf = new SimpleDateFormat("hh.mm dd.MM.yy");
+                            sdf.setTimeZone(TimeZone.getTimeZone("MSK"));
+                            dateManual2 = sdf.parse(matcher2.group(7));
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+
+                        }
+                    }
+
+                    System.out.println("8:" + matcher2.group(8));
+
+                    if (matcher2.group(8) != null) {
+                        Document doc = Jsoup.parse(matcher2.group(8));
                         Element table = doc.select("table").get(0); //select the first table.
                         Elements rows = table.select("tr");
 
@@ -247,7 +250,7 @@ public class ParsePollutionServlet extends HttpServlet {
 
                                 if (measured != null) {
                                     //Measurement measurement = new Measurement(dateManual1, dateManual2, measure_date, measured, measured/Double.parseDouble(pdk1), measurementParameter[0],  measurementParameter[1],mesurementStationName);
-                                    Measurement measurement = new Measurement(dateManual1, dateManual2, measure_date, measured, Double.parseDouble(pdk1), measurementParameter[0],  measurementParameter[1],mesurementStationName);
+                                    Measurement measurement = new Measurement(latitude,longitude,dateManual1, dateManual2, measure_date, measured, Double.parseDouble(pdk1), measurementParameter[0],  measurementParameter[1],mesurementStationName);
                                     mes.add(measurement);
                                 }
                             }
