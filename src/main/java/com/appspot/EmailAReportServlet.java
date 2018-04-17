@@ -101,7 +101,7 @@ public class EmailAReportServlet extends HttpServlet {
 
         Cell cell2 = row.createCell(1);
         cell2.setCellValue("ПДК, единицы измерения");
-        int i = 0;
+        int i = 1;
 
         CellStyle cellStyleDate = wb.createCellStyle();
         cellStyleDate.setDataFormat(createHelper.createDataFormat().getFormat("m/d/yy h:mm"));
