@@ -148,29 +148,34 @@ public class Measurement implements Serializable {
                 }
 
                 String city="";
-
-                final Geocoder geocoder = new Geocoder();
-                GeocoderRequest geocoderRequest = new GeocoderRequestBuilder().setLocation(new LatLng(new BigDecimal(latitude), new BigDecimal (longitude))).setLanguage("tt").getGeocoderRequest();
-                try {
-                    GeocodeResponse geocoderResponse = geocoder.geocode(geocoderRequest);
-                    System.out.println("Geocoder responce got");
-                    if (geocoderResponse.getResults().size()>0) {
-                        List<GeocoderAddressComponent> components=geocoderResponse.getResults().get(0).getAddressComponents();
-                        System.out.println("gac: "+components.toString());
-                        for (GeocoderAddressComponent gac: components)
-                        {
-                            System.out.println("gac: "+gac.toString());
-                            System.out.println("gac: "+gac.getTypes().toString());
-                            if (gac.getTypes().toString().contains("locality"))
-                            {
-                                city=gac.getLongName();
-                                System.out.println("city defined: "+city);
-                            }
-                        }
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
+                if (longitude< 49.521669) {city="Казань";}
+                else {
+                    if (longitude > 52.099203) {city = "Набережные Челны";}
+                    else {city = "Нижнекамск";};
                 }
+
+//                final Geocoder geocoder = new Geocoder();
+//                GeocoderRequest geocoderRequest = new GeocoderRequestBuilder().setLocation(new LatLng(new BigDecimal(latitude), new BigDecimal (longitude))).setLanguage("tt").getGeocoderRequest();
+//                try {
+//                    GeocodeResponse geocoderResponse = geocoder.geocode(geocoderRequest);
+//                    System.out.println("Geocoder responce got");
+//                    if (geocoderResponse.getResults().size()>0) {
+//                        List<GeocoderAddressComponent> components=geocoderResponse.getResults().get(0).getAddressComponents();
+//                        System.out.println("gac: "+components.toString());
+//                        for (GeocoderAddressComponent gac: components)
+//                        {
+//                            System.out.println("gac: "+gac.toString());
+//                            System.out.println("gac: "+gac.getTypes().toString());
+//                            if (gac.getTypes().toString().contains("locality"))
+//                            {
+//                                city=gac.getLongName();
+//                                System.out.println("city defined: "+city);
+//                            }
+//                        }
+//                    }
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
 
                 measurementTLVExceedNotification.city=city;
                 System.out.println(city);
