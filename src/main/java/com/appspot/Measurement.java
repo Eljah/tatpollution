@@ -78,8 +78,8 @@ public class Measurement implements Serializable {
 
     Measurement(Float latitude, Float longitude, Date start, Date stop, Date concrete, Double value, Double tlv, String parameter, String unit, String station) {
         this.stationAndParameterAndDate = station + parameter + start.getTime() + stop.getTime();
-        this.latitude=latitude;
-        this.longitude=longitude;
+        this.latitude = latitude;
+        this.longitude = longitude;
         this.dateStart = start.getTime();
         this.dateStop = stop.getTime();
         this.dateConcrete = concrete.getTime();
@@ -90,36 +90,36 @@ public class Measurement implements Serializable {
         this.tlv = tlv;
         this.parameter = Key.create(MeasurementParameter.class, parameter);
         this.parameterString = parameter;
-        this.unit=unit;
+        this.unit = unit;
         new MeasurementParameter(parameter, unit);
         this.station = Key.create(MeasurementStation.class, station);
         this.tlvExceds = this.value > this.tlv;
-        this.tlvApproached = this.value > this.tlv*0.8;
+        this.tlvApproached = this.value > this.tlv * 0.8;
 
         if (tlvExceds) {
             System.out.println("TLV exceed!!!");
-            MeasurementTLVExceedNotification possiblyAlreadyExisiting=ObjectifyService.ofy()
+            MeasurementTLVExceedNotification possiblyAlreadyExisiting = ObjectifyService.ofy()
                     .load()
                     .type(MeasurementTLVExceedNotification.class).id(stationAndParameterAndDate).now();
 
-            if (possiblyAlreadyExisiting==null) {
+            if (possiblyAlreadyExisiting == null) {
                 System.out.println("But notification is not sent yet since  it doesn't exist in the db");
-                MeasurementTLVExceedNotification measurementTLVExceedNotification=new MeasurementTLVExceedNotification();
-                measurementTLVExceedNotification.dateConcrete=dateConcrete;
-                measurementTLVExceedNotification.dateConcreteDate=dateConcreteDate;
-                measurementTLVExceedNotification.dateStart=dateStart;
-                measurementTLVExceedNotification.dateStop=dateStop;
-                measurementTLVExceedNotification.dateStartDate=dateStartDate;
-                measurementTLVExceedNotification.dateStopDate=dateStopDate;
-                measurementTLVExceedNotification.stationAndParameterAndDate=stationAndParameterAndDate;
-                measurementTLVExceedNotification.value=value;
-                measurementTLVExceedNotification.tlv=tlv;
-                measurementTLVExceedNotification.tlvExceds=tlvExceds;
-                measurementTLVExceedNotification.tlvApproached=tlvApproached;
-                measurementTLVExceedNotification.unit=unit;
-                measurementTLVExceedNotification.latitude=latitude;
-                measurementTLVExceedNotification.longitude=longitude;
-                measurementTLVExceedNotification.parameterString=parameterString;
+                MeasurementTLVExceedNotification measurementTLVExceedNotification = new MeasurementTLVExceedNotification();
+                measurementTLVExceedNotification.dateConcrete = dateConcrete;
+                measurementTLVExceedNotification.dateConcreteDate = dateConcreteDate;
+                measurementTLVExceedNotification.dateStart = dateStart;
+                measurementTLVExceedNotification.dateStop = dateStop;
+                measurementTLVExceedNotification.dateStartDate = dateStartDate;
+                measurementTLVExceedNotification.dateStopDate = dateStopDate;
+                measurementTLVExceedNotification.stationAndParameterAndDate = stationAndParameterAndDate;
+                measurementTLVExceedNotification.value = value;
+                measurementTLVExceedNotification.tlv = tlv;
+                measurementTLVExceedNotification.tlvExceds = tlvExceds;
+                measurementTLVExceedNotification.tlvApproached = tlvApproached;
+                measurementTLVExceedNotification.unit = unit;
+                measurementTLVExceedNotification.latitude = latitude;
+                measurementTLVExceedNotification.longitude = longitude;
+                measurementTLVExceedNotification.parameterString = parameterString;
 
                 Properties prop = new Properties();
                 InputStream input = null;
@@ -128,7 +128,7 @@ public class Measurement implements Serializable {
 
                     String filename = "telegram.properties";
                     input = this.getClass().getClassLoader().getResourceAsStream(filename);
-                    if(input==null){
+                    if (input == null) {
                         System.out.println("Sorry, unable to find " + filename);
                         return;
                     }
@@ -137,8 +137,8 @@ public class Measurement implements Serializable {
                     prop.load(input);
                 } catch (IOException ex) {
                     ex.printStackTrace();
-                } finally{
-                    if(input!=null){
+                } finally {
+                    if (input != null) {
                         try {
                             input.close();
                         } catch (IOException e) {
@@ -147,11 +147,16 @@ public class Measurement implements Serializable {
                     }
                 }
 
-                String city="";
-                if (longitude< 49.521669) {city="Казань";}
-                else {
-                    if (longitude > 52.099203) {city = "Набережные Челны";}
-                    else {city = "Нижнекамск";};
+                String city = "";
+                if (longitude < 49.521669) {
+                    city = "Казань";
+                } else {
+                    if (longitude > 52.099203) {
+                        city = "Набережные Челны";
+                    } else {
+                        city = "Нижнекамск";
+                    }
+                    ;
                 }
 
 //                final Geocoder geocoder = new Geocoder();
@@ -177,7 +182,7 @@ public class Measurement implements Serializable {
 //                    e.printStackTrace();
 //                }
 
-                measurementTLVExceedNotification.city=city;
+                measurementTLVExceedNotification.city = city;
                 System.out.println(city);
 
                 System.out.println("Sending message to @TatPollution telegram channel");
@@ -186,19 +191,17 @@ public class Measurement implements Serializable {
                 TgBotApi api = new TgBotApi(TOKEN, OWNER);
 
                 //DateFormat df = DateFormat.getDateInstance(DateFormat.FULL, new Locale("ru"));
-                SimpleDateFormat simpleDateFormat=new SimpleDateFormat("dd MMMMM yyyy HH:mm",new Locale("ru"));
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd MMMMM yyyy HH:mm", new Locale("ru"));
                 String formattedStartDate = simpleDateFormat.format(dateStart);
                 String formattedStopDate = simpleDateFormat.format(dateStop);
                 try {
-                    api.sendMessage("@tatpollution", "Превышение предельно допустимого показателя " + tlv +" "+unit+ " на станции "+city+", " + station + " для параметра " + parameter + " по измерениям " + formattedStartDate + "-" + formattedStopDate + " в " + value / tlv + " раз");
-                    api.sendLocation("@tatpollution", latitude,longitude,0,0,null);
+                    api.sendMessage("@tatpollution", "Превышение предельно допустимого показателя " + tlv + " " + unit + " на станции " + city + ", " + station + " для параметра " + parameter + " по измерениям " + formattedStartDate + "-" + formattedStopDate + " в " + value / tlv + " раз");
+                    api.sendLocation("@tatpollution", latitude, longitude, 0, 0, null);
                 } catch (IOException e1) {
                     e1.printStackTrace();
                 }
                 ObjectifyService.ofy().save().entity(measurementTLVExceedNotification).now();
-            }
-            else
-            {
+            } else {
                 System.out.println("Notification already exist in db so it will not be sent");
             }
 
