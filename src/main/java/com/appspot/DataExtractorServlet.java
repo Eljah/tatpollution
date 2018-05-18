@@ -93,56 +93,64 @@ public class DataExtractorServlet extends DataSourceServlet {
         syncCache.setErrorHandler(ErrorHandlers.getConsistentLogAndContinue(Level.INFO));
         datasets = (List<Measurement>) syncCache.get(parameter + " " + station + " " + timevalue); // Read from cache.
 
-        if (datasets == null) {
-            //if (count != -1) {
-            if (station != null) {
-                if (parameter != "") {
-                    datasets = ObjectifyService.ofy()
-                            .load()
-                            .type(Measurement.class)
-                            .ancestor(new MeasurementStation(station)).
-                                    filter("dateStart <= ", to.getTime()).
-                                    filter("dateStart >= ", from.getTime()).
-                                    filter("parameterString = ", parameter).
-                            //.orderKey(true)
-                            //.limit(count)             // Only show 5 of them.
-                                    list();
+        try {
+            if (datasets == null) {
+                //if (count != -1) {
+                if (station != null&&!station.equals("")) {
+                    if (!parameter.equals("")) {
+                        datasets = ObjectifyService.ofy()
+                                .load()
+                                .type(Measurement.class)
+                                .ancestor(new MeasurementStation(station)).
+                                //.ancestor(Key.create(MeasurementStation.class,station)).
+                                        filter("dateStart <= ", to.getTime()).
+                                        filter("dateStart >= ", from.getTime()).
+                                        filter("parameterString = ", parameter).
+                                //.orderKey(true)
+                                //.limit(count)             // Only show 5 of them.
+                                        list();
+                    } else {
+                        System.out.println("1-1");
+                        datasets = ObjectifyService.ofy()
+                                .load()
+                                .type(Measurement.class)
+                                .ancestor(new MeasurementStation(station)).
+                                //.ancestor(Key.create(MeasurementStation.class,station)).
+                                        filter("dateStart <= ", to.getTime()).
+                                        filter("dateStart >= ", from.getTime()).
+                                        list();
+                        System.out.println("1-2");
+                    }
+
                 } else {
-                    System.out.println("1-1");
-                    datasets = ObjectifyService.ofy()
-                            .load()
-                            .type(Measurement.class)
-                            .ancestor(new MeasurementStation(station)).
-                                    filter("dateStart <= ", to.getTime()).
-                                    filter("dateStart >= ", from.getTime()).
-                                    list();
-                    System.out.println("1-2");
+                    if (!parameter.equals("")) {
+                        datasets = ObjectifyService.ofy()
+                                .load()
+                                .type(Measurement.class).
+                                        filter("dateStart <= ", to.getTime()).
+                                        filter("dateStart >= ", from.getTime()).
+                                        filter("parameterString = ", parameter).
+                                        list();
+                    } else {
+                        System.out.println("2-1");
+                        datasets = ObjectifyService.ofy()
+                                .load()
+                                .type(Measurement.class).
+                                        filter("dateStart <= ", to.getTime()).
+                                        filter("dateStart >= ", from.getTime()).
+                                        list();
+                        System.out.println("2-2");
+                    }
+
+                    System.out.println(datasets);
+                    syncCache.put(parameter + " " + station + " " + timevalue, datasets);
+
                 }
-
-            } else {
-                if (parameter != "") {
-                    datasets = ObjectifyService.ofy()
-                            .load()
-                            .type(Measurement.class).
-                                    filter("dateStart <= ", to.getTime()).
-                                    filter("dateStart >= ", from.getTime()).
-                                    filter("parameterString = ", parameter).
-                                    list();
-                } else {
-                    System.out.println("2-1");
-                    datasets = ObjectifyService.ofy()
-                            .load()
-                            .type(Measurement.class).
-                                    filter("dateStart <= ", to.getTime()).
-                                    filter("dateStart >= ", from.getTime()).
-                                    list();
-                    System.out.println("2-2");
-                }
-
-                System.out.println(datasets);
-                syncCache.put(parameter + " " + station + " " + timevalue, datasets);
-
             }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
         }
         //Collections.reverse(datasets);
         for (Measurement de : datasets) {
