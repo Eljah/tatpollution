@@ -1,16 +1,6 @@
 package com.appspot;
 
-import com.google.appengine.api.blobstore.BlobstoreService;
-import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
-import com.google.appengine.api.datastore.Blob;
 import com.google.appengine.api.memcache.MemcacheServiceFactory;
-import com.googlecode.objectify.ObjectifyService;
-import com.sun.org.apache.xpath.internal.SourceTree;
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Row;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -117,7 +107,7 @@ public class ParsePollutionServlet extends HttpServlet {
             Pattern pattern = Pattern.compile(".*?Placemark\\(\\[(\\d{2}\\.\\d+),.*?(\\d{2}.\\d+)\\].*?\\{.*?balloonContent:.*?'(<b.*?>.*?table>)<br\\/>.*?'.*?\\}", Pattern.DOTALL);
             Matcher matcher = pattern.matcher(elementWithYmap.toString().replaceAll("[\n\r]", ""));
 
-            Pattern pattern2 = Pattern.compile("(?:.*?Placemark\\(\\[(\\d{2}\\.\\d+),.*?(\\d{2}.\\d+)\\].*?<b.*?>(.*?)<\\/b>)(?:[^{}]*?(\\d{2}\\.\\d{2}\\.\\d{4})[^{}]*?(<table.*?>.*?<\\/table>))?[^{}](?:[^{}]*?(\\d{2}\\.\\d{2}\\s*?\\d{2}\\.\\d{2}\\.\\d{2}).*?(\\d{2}\\.\\d{2}\\s*?\\d{2}\\.\\d{2}\\.\\d{2})[^{}]*?(<table.*?>.*?<\\/table>))?", Pattern.DOTALL);
+            Pattern pattern2 = Pattern.compile("(?:.*?Placemark\\(\\[(\\d{2}\\.\\d+),.*?(\\d{2}.\\d+)\\].*?<b.*?>(.*?)<\\/b>)(?:[^{}]*?(\\d{2}\\.\\d{2}\\.\\d{4})[^{}]*?(<table.*?>.*?<\\/table>))?[^{}](?:[^{}]*?(\\d{2}\\.\\d{2}\\s*?\\d{1,2}\\.\\d{2}\\.\\d{2}).*?(\\d{2}\\.\\d{2}\\s*?\\d{1,2}\\.\\d{2}\\.\\d{2})[^{}]*?(<table.*?>.*?<\\/table>).*)?", Pattern.DOTALL);
 
             while (matcher.find()) {
                 System.out.println("0:" + matcher.group(0));
