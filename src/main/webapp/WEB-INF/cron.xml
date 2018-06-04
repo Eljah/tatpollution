@@ -11,4 +11,10 @@
         <schedule>every monday 00:30</schedule>
         <timezone>America/Los_Angeles</timezone>
     </cron>
+    <cron>
+        <url>/email?month=1</url>
+        <description>Every month</description>
+        <schedule>1 of month 02:30</schedule>
+        <timezone>America/Los_Angeles</timezone>
+    </cron>
 </cronentries>

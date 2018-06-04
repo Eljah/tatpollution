@@ -71,9 +71,25 @@ public class Measurement implements Serializable {
     public Float longitude;
     @Index
     public String unit;
+    @Index
+    public String city;
+
 
     Measurement() {
 
+    }
+
+    Measurement(Float latitude, Float longitude) {
+        if (longitude < 49.521669) {
+            this.city = "Казань";
+        } else {
+            if (longitude > 52.099203) {
+                this.city = "Набережные Челны";
+            } else {
+                this.city = "Нижнекамск";
+            }
+            ;
+        }
     }
 
     Measurement(Float latitude, Float longitude, Date start, Date stop, Date concrete, Double value, Double tlv, String parameter, String unit, String station) {
@@ -95,6 +111,17 @@ public class Measurement implements Serializable {
         this.station = Key.create(MeasurementStation.class, station);
         this.tlvExceds = this.value > this.tlv;
         this.tlvApproached = this.value > this.tlv * 0.8;
+
+        if (longitude < 49.521669) {
+            this.city = "Казань";
+        } else {
+            if (longitude > 52.099203) {
+                this.city = "Набережные Челны";
+            } else {
+                this.city = "Нижнекамск";
+            }
+            ;
+        }
 
         if (tlvExceds) {
             System.out.println("TLV exceed!!!");
@@ -147,17 +174,8 @@ public class Measurement implements Serializable {
                     }
                 }
 
-                String city = "";
-                if (longitude < 49.521669) {
-                    city = "Казань";
-                } else {
-                    if (longitude > 52.099203) {
-                        city = "Набережные Челны";
-                    } else {
-                        city = "Нижнекамск";
-                    }
-                    ;
-                }
+
+
 
 //                final Geocoder geocoder = new Geocoder();
 //                GeocoderRequest geocoderRequest = new GeocoderRequestBuilder().setLocation(new LatLng(new BigDecimal(latitude), new BigDecimal (longitude))).setLanguage("tt").getGeocoderRequest();

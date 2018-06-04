@@ -39,9 +39,17 @@ public class EmailAReportServlet extends HttpServlet {
             measurementParametersLabels.add(st.parameterName);
         }
 
+
         Calendar cal = new GregorianCalendar();
         cal.add(Calendar.DAY_OF_MONTH, -7);
         Date sevenDaysAgo = cal.getTime();
+
+        if (req.getParameter("month")!=null)
+        {
+            cal.add(Calendar.MONTH, -1);
+            cal.add(Calendar.DATE, 1);
+            sevenDaysAgo = cal.getTime();
+        }
 
         List<List<Measurement>> datasets = new ArrayList<>();
 
@@ -155,7 +163,7 @@ public class EmailAReportServlet extends HttpServlet {
                     }
                 }
                 if (last != null) {
-                    station_and_parameter.setCellValue(last.station.getName() + ':' + last.parameterString);
+                    station_and_parameter.setCellValue(last.city+", "+ last.station.getName() + ':' + last.parameterString);
                     if (last.unit != null) {
                         tlv.setCellValue(last.tlv + ", " + last.unit);
                     } else
